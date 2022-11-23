@@ -8,8 +8,10 @@ from os.path import dirname as up
 version_path = os.path.join(up(up(up(os.path.abspath(__file__)))), "pyfdb/version.py")
 
 __version__ = re.search(
-    r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]', io.open(version_path, encoding="utf_8_sig").read()
-).group(1)
+    r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+    io.open(version_path, encoding="utf_8_sig").read(),
+)[1]
+
 
 # -- Project information
 

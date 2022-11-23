@@ -58,7 +58,7 @@ print('direct function, request as dictionary:', request)
 for el in pyfdb.list(request, True):
     assert(el['path'])
     assert(el['path'].find('rd:xxxx:oper:20191110:0000:g/an:pl.') != -1)
-    assert(not 'keys' in el)
+    assert 'keys' not in el
 
 request['levelist'] = ['100', '200', '300', '400', '500', '700', '850', '1000']
 request['param'] = '138'
@@ -100,7 +100,7 @@ for el in fdb.list(request, True, True):
     keys = el['keys']
     assert(keys['class'] == 'rd')
     assert(keys['levelist'] == '400')
-    
+
 
 ### Retrieve ###
 request = {

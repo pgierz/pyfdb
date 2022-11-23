@@ -74,7 +74,9 @@ class PatchedLib:
         versionstr = ffi.string(tmp_str[0]).decode('utf-8')
 
         if parse_version(versionstr) < parse_version(__fdb_version__):
-            raise RuntimeError("Version of libfdb found is too old. {} < {}".format(versionstr, __fdb_version__))
+            raise RuntimeError(
+                f"Version of libfdb found is too old. {versionstr} < {__fdb_version__}"
+            )
 
     def __read_header(self):
         with open(os.path.join(os.path.dirname(__file__), 'processed_fdb.h'), 'r') as f:
@@ -88,7 +90,10 @@ class PatchedLib:
 
         def wrapped_fn(*args, **kwargs):
             retval = fn(*args, **kwargs)
-            if retval != self.__lib.FDB_SUCCESS and retval != self.__lib.FDB_ITERATION_COMPLETE:
+            if retval not in [
+                self.__lib.FDB_SUCCESS,
+                self.__lib.FDB_ITERATION_COMPLETE,
+            ]:
                 error_str = "Error in function {}: {}".format(name, ffi.string(self.__lib.fdb_error_string(retval)).decode())
                 raise FDBException(error_str)
             return retval
@@ -194,7 +199,7 @@ class ListIterator:
                     v = ffi.new('const char**')
                     level = ffi.new('size_t*')
 
-                    meta = dict()
+                    meta = {}
                     while lib.fdb_splitkey_next_metadata(key, k, v, level) == 0:
                         meta[ffi.string(k[0]).decode('utf-8')] = ffi.string(v[0]).decode('utf-8')
                     el['keys'] = meta
@@ -247,7 +252,7 @@ class DataRetriever:
             buf = bytearray(count)
             read = ffi.new('long*')
             lib.fdb_datareader_read(self.__dataread, ffi.from_buffer(buf), count, read)
-            return buf[0:read[0]]
+            return buf[:read[0]]
 
     def __enter__(self):
         return self

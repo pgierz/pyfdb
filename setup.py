@@ -4,8 +4,10 @@ import re
 from setuptools import find_packages, setup
 
 __version__ = re.search(
-    r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]', io.open("pyfdb/version.py", encoding="utf_8_sig").read()
-).group(1)
+    r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+    io.open("pyfdb/version.py", encoding="utf_8_sig").read(),
+)[1]
+
 
 setup(
     name="pyfdb",
